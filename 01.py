@@ -2,6 +2,7 @@ import os
 import json
 from openai import AzureOpenAI
 from dotenv import load_dotenv
+import base64
 
 
 load_dotenv()
@@ -19,15 +20,32 @@ client = AzureOpenAI(
     api_key=subscription_key,
 )
 
+
+# To stream image as binary data and send it
+with open("azure-vm-diagram.png","rb") as image_file:  # r read, b binary, reading the image as python object
+    image_details=base64.b64encode(image_file.read()).decode("utf-8")
+
 response = client.chat.completions.create(
     messages=[
         {
             "role": "system",
-            "content": "You are an assistant helping students to learn about Large Language Models",
+            "content": "You are an assistant who helps to describe images",
         },
         {
             "role": "user",
-            "content": "What is temperature setting",
+            "content" :
+            [
+                {
+                    "type":"text",
+                    "text":"Give me a description of what the image is trying to explain"
+                },
+                {
+                    "type":"image_url",
+                    "image_url":{
+                        "url":f"data:image/png;base64,{image_details}"
+                    }
+                }
+            ]
         }
     ],
     max_tokens=16384,
