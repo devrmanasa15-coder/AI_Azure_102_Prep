@@ -8,9 +8,6 @@ import base64
 load_dotenv()
 
 endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-model_name = "gpt-4o"
-deployment = "gpt-4o"
-
 subscription_key = os.environ.get("AZURE_OPENAI_API_KEY")
 api_version = "2024-12-01-preview"
 
